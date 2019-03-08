@@ -18,9 +18,7 @@
 ;-------------------------------------------------------------------------------
 ;   Includes
 ;-------------------------------------------------------------------------------
-; .include "SNESRegisters.inc"
-; .include "NekoMacros.inc"
-; .include "WRAMPointers.inc"
+.include "Registers.inc"
 ;-------------------------------------------------------------------------------
 
 ;-------------------------------------------------------------------------------
@@ -43,9 +41,29 @@
 ;   sending it to the ACIA byte by byte.
 ;-------------------------------------------------------------------------------
 .proc   PrintString
+        ; get string start address from stack
+        tsx                     ; get current stack pointer
+        inx                     ; increment by three to access arguments
+        inx
+        inx
+        lda     $0100, X        ; get low byte of Pointer
+        sta     A0L             ; store in address register 0 low
+        inx                     ; increment counter
+        lda     $0100, X        ; get high byte of Pointer
+        sta     A0H             ; store in address register 0 high
+        ; start output loop
+        ldy     #$00            ; use Y as offset
 
-        ; code
+Loop:   lda     IOSTATUS        ; check ACIA status
+        and     #$10            ; is the tx register empty?
+        beq     Loop            ; if not, wait and check again
+        lda     (A0L), Y        ; else, load next char of string
+        beq     Done            ; if it's zero, string is done
+        sta     IOBASE          ; else, send it to ACIA
+        iny                     ; increment string pointer
+        bra     Loop            ; get next char
 
-        rts
+Done:
+        rts                     ; return to caller
 .endproc
 ;----- end of subroutine PrintString -------------------------------------------

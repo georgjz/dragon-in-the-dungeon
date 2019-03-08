@@ -26,4 +26,4 @@ BIOS_INC = 1
 .import     PrintString         ; Print a string at a given address
 ;-------------------------------------------------------------------------------
 
-.endif  ; INPUTUTILS_INC
+.endif  ; BIOS_INC

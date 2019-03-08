@@ -20,19 +20,6 @@
 REGISTERS_INC = 1
 
 ;-------------------------------------------------------------------------------
-;   ACIA: This symbols represent the registers of a 6551 ACIA that handles
-;   the system's input and output.
-;       This code assumes the 6551 ACIA is connected to the address bus such
-;   that the ACIA registers are accessed in the indicated sequence. Adjust for
-;   your target system accordingly.
-;-------------------------------------------------------------------------------
-    IOBASE      := $8800
-    IOSTATUS    := $8801
-    IOCMD       := $8802
-    IOCTRL      := $8803
-;-------------------------------------------------------------------------------
-
-;-------------------------------------------------------------------------------
 ;   Zero Page Registers: This code allows to use the zero page as a 256 byte
 ;   scratch pad. There are two kinds of symbols here: Rxx designates a single
 ;   byte registers. AxL and AxH are two consecutive bytes in zero page. They're

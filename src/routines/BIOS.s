@@ -18,6 +18,7 @@
 ;-------------------------------------------------------------------------------
 ;   Includes
 ;-------------------------------------------------------------------------------
+.include "MemoryMap.inc"
 .include "Registers.inc"
 ;-------------------------------------------------------------------------------
 
@@ -30,7 +31,8 @@
 ;-------------------------------------------------------------------------------
 ;   Routines found in this file
 ;-------------------------------------------------------------------------------
-.export     PrintString         ; Print a string at a given address
+.export     PrintString         ; print a string at a given address
+.export     ReadChar            ; read a char from keyboard and store in I/O buffer
 ;-------------------------------------------------------------------------------
 
 .segment "CODE"
@@ -55,7 +57,7 @@
         ldy     #$00            ; use Y as offset
 
 Loop:   lda     IOSTATUS        ; check ACIA status
-        and     #$10            ; is the tx register empty?
+        and     #$10            ; is the TX register empty?
         beq     Loop            ; if not, wait and check again
         lda     (A0L), Y        ; else, load next char of string
         beq     Done            ; if it's zero, string is done
@@ -63,6 +65,24 @@ Loop:   lda     IOSTATUS        ; check ACIA status
         iny                     ; increment string pointer
         bra     Loop            ; get next char
 
+Done:
+        rts                     ; return to caller
+.endproc
+;----- end of subroutine PrintString -------------------------------------------
+
+;-------------------------------------------------------------------------------
+;   Subroutine: ReadChar
+;   Parameters: .addr BufferPointer
+;   Description: Read a char from keyboard and stores it in the I/O Buffer. If
+;   the char read is a CR, then the parser is invoked to parse the content of
+;   the I/O buffer.
+;-------------------------------------------------------------------------------
+.proc   ReadChar
+        ; get buffer address from stack
+        tsx                     ; get current stack pointer
+        inx                     ; increment by three to access arguments
+        inx
+        inx
 Done:
         rts                     ; return to caller
 .endproc

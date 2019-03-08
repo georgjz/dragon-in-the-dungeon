@@ -24,6 +24,7 @@ BIOS_INC = 1
 ;   Routines found in this file
 ;-------------------------------------------------------------------------------
 .import     PrintString         ; Print a string at a given address
+.import     ReadChar            ; read a char from keyboard and store in I/O buffer
 ;-------------------------------------------------------------------------------
 
 .endif  ; BIOS_INC

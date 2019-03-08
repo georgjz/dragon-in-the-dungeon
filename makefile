@@ -1,9 +1,9 @@
-# Makefile that will build the SNES Kitsune Engine
-# ------------------------------------------------
+# Makefile that will build Dragon in the Dungeon
+# ----------------------------------------------
 
 # Edit this portion to fit your project
 MMAP		= MemoryMap.cfg			# memory map file needed by ld65 linker
-BUILDNAME	= ForthTest.rom 		# name of the final ROM
+BUILDNAME	= ditd.rom 				# name of the final ROM
 
 
 
@@ -36,14 +36,6 @@ rwildcard=$(wildcard $1$2) $(foreach d,$(wildcard $1*),$(call rwildcard,$d/,$2))
 INCLUDES := $(call rwildcard,./,*.inc)				# find all *.inc files
 INCDIRS	 := $(sort $(dir $(INCLUDES)))				# remove file names, sort them
 INCARGS  := $(foreach inc, $(INCDIRS),-I $(inc))	# add to list of include paths
-
-# Find graphics and add to includes
-# GRAPHICS := $(call rwildcard,./,*.pal)				# add palettes
-# GRAPHICS += $(call rwildcard,./,*.vra)				# add sprite sheets
-# GRAPHICS += $(call rwildcard,./,*.map)				# add tile maps
-# GFXDIRS	 := $(sort $(dir $(GRAPHICS)))				# remove file names, sort them
-# BINARGS  := $(foreach inc, $(GFXDIRS),--bin-include-dir $(inc))	# add to list of include paths
-
 
 # Sources
 SOURCES	:= $(call rwildcard,./,*.s)			# list all source files

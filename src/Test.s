@@ -1,3 +1,9 @@
+.include "BIOS.inc"
+
+.export ResetHandler
+.export IRQHandler
+.export NMIHandler
+
 ; Freaking 6502 system test
 IOACIA      := $8800
 IOSTATUS    := $8801
@@ -6,7 +12,8 @@ IOCTRL      := $8803
 
 .segment "CODE"
 
-Start:  cli
+.proc   ResetHandler
+        cli
         lda     #$0b
         sta     IOCMD
         lda     #$1a
@@ -23,6 +30,21 @@ Loop:   lda     IOSTATUS
 
         inx
         bra     Loop
+.endproc
 
 String:
-.byte   "Hello, 6502 World!", $0d, $00
+.byte   "Hello, 6502 World! ", $00
+
+.proc   NMIHandler
+        ; empty
+        rti
+.endproc
+
+
+.proc   IRQHandler
+        ; enpty
+        rti
+.endproc
+;
+; .segment "VECTOR"
+; .addr   IRQHandler, NMIHandler, Start

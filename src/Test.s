@@ -1,3 +1,5 @@
+.include "BIOS.inc"
+
 ; Freaking 6502 system test
 IOACIA      := $8800
 IOSTATUS    := $8801

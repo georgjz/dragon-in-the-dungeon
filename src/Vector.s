@@ -10,20 +10,25 @@
 ; The above copyright notice and this permission notice shall be included in
 ; all copies or substantial portions of the Software.
 ; -----------------------------------------------------------------------------
-;   File: BIOS.inc
+;   File: Vector.s
 ;   Author(s): Georg Ziegler
-;   Description: This a header file for BIOS.s, include this us the subroutines
-;   defined therein.
+;   Description: This file includes the addresses of the interrupt and reset
+;   handlers.
 ;
 
-; Header guard
-.ifndef BIOS_INC
-BIOS_INC = 1
-
 ;-------------------------------------------------------------------------------
-;   Routines found in this file
+;   Imported routines
 ;-------------------------------------------------------------------------------
-.import     PrintString         ; Print a string at a given address
+.import     ResetHandler
+.import     IRQHandler
+.import     NMIHandler
 ;-------------------------------------------------------------------------------
 
-.endif  ; INPUTUTILS_INC
+;-------------------------------------------------------------------------------
+;   segment VECTOR: contains the interrupt and reset handlers
+;-------------------------------------------------------------------------------
+.segment "VECTOR"
+.addr   NMIHandler              ; called on non-maskable interrupt
+.addr   ResetHandler            ; called on reset
+.addr   IRQHandler              ; called on interrupt request
+;-------------------------------------------------------------------------------

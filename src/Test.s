@@ -1,34 +1,31 @@
 .include "BIOS.inc"
+.include "Registers.inc"
 
 .export ResetHandler
 .export IRQHandler
 .export NMIHandler
 
-; Freaking 6502 system test
-IOACIA      := $8800
-IOSTATUS    := $8801
-IOCMD       := $8802
-IOCTRL      := $8803
 
 .segment "CODE"
-
 .proc   ResetHandler
         cli
         lda     #$0b
-        sta     IOCMD
+        sta     IOCMD           ; set command status
         lda     #$1a
-        sta     IOCTRL
+        sta     IOCTRL          ; 0 stop bits, 8 bit word, 2400 baud
 
-Init:   ldx     #$00
-
-Loop:   lda     IOSTATUS
-        and     #$10
-        beq     Loop
-        lda     String, X
-        beq     Init
-        sta     IOACIA
-
-        inx
+Loop:
+        ; push string address to stack
+        lda     #>String        ; get low address
+        pha
+        lda     #<String        ; get high a
+        pha
+        ; call subroutine
+        jsr     PrintString
+        ; clean up stack
+        pla
+        pla
+        ; loop forever
         bra     Loop
 .endproc
 

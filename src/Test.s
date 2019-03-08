@@ -1,5 +1,7 @@
-.include "BIOS.inc"
+; .include "BIOS.inc"
 .include "Registers.inc"
+.include "SubroutineLauncher.inc"
+.include "SubroutineOpcodes.inc"
 
 .export ResetHandler
 .export IRQHandler
@@ -21,7 +23,8 @@ Loop:
         lda     #<String        ; get high a
         pha
         ; call subroutine
-        jsr     PrintString
+        lda     #PrintStringOpcode
+        jsr     SubroutineLauncher
         ; clean up stack
         pla
         pla

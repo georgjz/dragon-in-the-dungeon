@@ -26,7 +26,12 @@ MEMORYMAP_INC = 1
     DUNGEONSIZE     = $0a       ; number of chambers in one direction
     BATS            = $04       ; number of bats in the dungeon
     PITS            = $0c       ; number of pits in the dungeon
-    BUFFERSIZE      = $50       ; buff
+    BUFFERSIZE      = $50       ; buffer size
+    ; additional ASCII constants for parser and I/O subroutines
+    BS              = $0b       ; backspace
+    LF              = $0a       ; line feed
+    CR              = $0d       ; carriage return
+    SPACE           = $20       ; space
 ;-------------------------------------------------------------------------------
 
 ;-------------------------------------------------------------------------------

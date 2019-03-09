@@ -20,6 +20,8 @@
 ;-------------------------------------------------------------------------------
 .include "MemoryMap.inc"
 .include "Registers.inc"
+.include "SubroutineLauncher.inc"
+.include "SubroutineOpcodes.inc"
 ;-------------------------------------------------------------------------------
 
 ;-------------------------------------------------------------------------------
@@ -78,20 +80,36 @@ Done:
 ;   the I/O buffer.
 ;-------------------------------------------------------------------------------
 .proc   ReadChar
-        ; sei                     ; disable interrupts
-        ; lda     IOBASE          ; get char from ACIA
-        ; ldx     IOBUFPTR        ; get current buffer offset
-        ; sta     IOBUFFER, X     ; store new char in I/O buffer
-        ; inx                     ; increment buffer offset
-        ; cmp     CR              ; if the new char is CR...
-        ; cmp     #$00            ; if the new char is CR...
-        ; bne     Echo
-            ; ...call parser
-            ; stz IOBUFPTR        ; reset buffer offset
-            ; lda ParserOpcode    ; call parser
-            ; jsr SubroutineLauncher
-
+        sei                     ; disable interrupts
         lda     IOBASE          ; get char from ACIA
+        ldx     IOBUFPTR        ; get current buffer offset
+        sta     IOBUFFER, X     ; store new char in I/O buffer
+        inx                     ; increment buffer offset
+        stx     IOBUFPTR
+        ; check for buffer overflow
+        cpx     #BUFFERSIZE     ; if buffer offset greater than 80...
+        bcc     CRCheck         ; ...then continue with CR check
+            ; else, print error message and reset I/O buffer
+            stz     IOBUFPTR    ; reset I/O buffer offset
+            lda     #>IBufOverflowErr
+            pha
+            lda     #<IBufOverflowErr
+            pha
+            lda     #PrintStringOpcode
+            jsr     SubroutineLauncher
+            pla                 ; clean up stack
+            pla
+            bra     Done
+        ; check for carriage return
+CRCheck:
+        cmp     #CR             ; check if new char is CR
+        bne     Echo            ; if not, echo new char
+            ; else, invoke parser
+            stz     IOBUFPTR    ; reset input buffer
+            lda     #ParserOpcode ; invoke parser
+            jsr     SubroutineLauncher
+            bra     Done        ; parsing done
+
 Echo:   pha                     ; save new char on stack
 Wait:   lda     IOSTATUS        ; check ACIA status
         and     #$10            ; is TX register empty?
@@ -99,16 +117,11 @@ Wait:   lda     IOSTATUS        ; check ACIA status
         pla                     ; else, get new char
         sta     IOBASE          ; and send to output
 
-        ; - get char from ACIA
-        ; - get current buffer pointer
-        ; - increment pointer
-        ; - write new char to buffer
-        ; - if new char is CR
-        ; - reset buffer pointer
-        ; - call parser
-        ; - DONE
-
-Done:   ;cli                     ; re-enable interrupts
+Done:   cli                     ; re-enable interrupts
         rti                     ; return after interrupt
 .endproc
 ;----- end of subroutine ReadChar ----------------------------------------------
+
+; test data
+IBufOverflowErr:
+.byte   $0d, $0a, "Input buffer overflow!", $0d, $0a, $00

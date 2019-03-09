@@ -31,6 +31,8 @@ SUBROUTINEOPCODES_INC = 1
 ;-------------------------------------------------------------------------------
     ; BIOS.inc
     PrintStringOpcode       := $00
+    ; Parser.inc
+    ParserOpcode            := $01
 ;-------------------------------------------------------------------------------
 
 .endif  ; SUBROUTINEOPCODES_INC

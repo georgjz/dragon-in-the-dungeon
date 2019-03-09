@@ -38,7 +38,8 @@ MEMORYMAP_INC = 1
     ; don't edit unless you know what you're doing (:
     DUNGEON     := RAMSTART     ; pointer to dungeon
     WARRIORPOS  := RAMSTART + DUNGEONSIZE*DUNGEONSIZE   ; hold the current position of the Warrior
-    IOBUFFER    := WARRIORPOS + $01 ; I/O buffer for the BIOS routines
+    IOBUFPTR    := WARRIORPOS + $01 ; I/O buffer offset
+    IOBUFFER    := IOBUFPTR + $01   ; I/O buffer for the BIOS routines
 ;-------------------------------------------------------------------------------
 
 ;-------------------------------------------------------------------------------

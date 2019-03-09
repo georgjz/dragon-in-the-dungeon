@@ -17,10 +17,17 @@
 ;
 
 ;-------------------------------------------------------------------------------
+;   Includes
+;-------------------------------------------------------------------------------
+.include "BIOS.inc"
+; .include "Registers.inc"
+;-------------------------------------------------------------------------------
+
+;-------------------------------------------------------------------------------
 ;   Imported routines
 ;-------------------------------------------------------------------------------
 .import     ResetHandler
-.import     IRQHandler
+; .import     IRQHandler
 .import     NMIHandler
 ;-------------------------------------------------------------------------------
 
@@ -30,5 +37,6 @@
 .segment "VECTOR"
 .addr   NMIHandler              ; called on non-maskable interrupt
 .addr   ResetHandler            ; called on reset
-.addr   IRQHandler              ; called on interrupt request
+; .addr   IRQHandler              ; called on interrupt request
+.addr   ReadChar                ; called on interrupt request
 ;-------------------------------------------------------------------------------

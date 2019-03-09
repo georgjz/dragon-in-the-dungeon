@@ -71,19 +71,44 @@ Done:
 ;----- end of subroutine PrintString -------------------------------------------
 
 ;-------------------------------------------------------------------------------
-;   Subroutine: ReadChar
-;   Parameters: .addr BufferPointer
+;   IRQ Handler: ReadChar
+;   Parameters: -
 ;   Description: Read a char from keyboard and stores it in the I/O Buffer. If
 ;   the char read is a CR, then the parser is invoked to parse the content of
 ;   the I/O buffer.
 ;-------------------------------------------------------------------------------
 .proc   ReadChar
-        ; get buffer address from stack
-        tsx                     ; get current stack pointer
-        inx                     ; increment by three to access arguments
-        inx
-        inx
-Done:
-        rts                     ; return to caller
+        ; sei                     ; disable interrupts
+        ; lda     IOBASE          ; get char from ACIA
+        ; ldx     IOBUFPTR        ; get current buffer offset
+        ; sta     IOBUFFER, X     ; store new char in I/O buffer
+        ; inx                     ; increment buffer offset
+        ; cmp     CR              ; if the new char is CR...
+        ; cmp     #$00            ; if the new char is CR...
+        ; bne     Echo
+            ; ...call parser
+            ; stz IOBUFPTR        ; reset buffer offset
+            ; lda ParserOpcode    ; call parser
+            ; jsr SubroutineLauncher
+
+        lda     IOBASE          ; get char from ACIA
+Echo:   pha                     ; save new char on stack
+Wait:   lda     IOSTATUS        ; check ACIA status
+        and     #$10            ; is TX register empty?
+        beq     Wait            ; if not, wait
+        pla                     ; else, get new char
+        sta     IOBASE          ; and send to output
+
+        ; - get char from ACIA
+        ; - get current buffer pointer
+        ; - increment pointer
+        ; - write new char to buffer
+        ; - if new char is CR
+        ; - reset buffer pointer
+        ; - call parser
+        ; - DONE
+
+Done:   ;cli                     ; re-enable interrupts
+        rti                     ; return after interrupt
 .endproc
-;----- end of subroutine PrintString -------------------------------------------
+;----- end of subroutine ReadChar ----------------------------------------------

@@ -12,25 +12,15 @@
 .segment "CODE"
 .proc   ResetHandler
         cli
-        lda     #$0b
+        ; lda     #$0b
+        lda     #$09
         sta     IOCMD           ; set command status
         lda     #$1a
         sta     IOCTRL          ; 0 stop bits, 8 bit word, 2400 baud
 
-Loop:
-        ; push string address to stack
-        lda     #>String        ; get low address
-        pha
-        lda     #<String        ; get high a
-        pha
-        ; call subroutine
-        lda     #PrintStringOpcode
-        jsr     SubroutineLauncher
-        ; clean up stack
-        pla
-        pla
-        ; loop forever
-        bra     Loop
+MainLoop:
+        wai
+        bra     MainLoop
 .endproc
 
 String:
@@ -43,7 +33,7 @@ String:
 
 
 .proc   IRQHandler
-        ; enpty
+        ; empty
         rti
 .endproc
 ;

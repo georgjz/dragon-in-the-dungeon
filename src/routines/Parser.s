@@ -10,33 +10,55 @@
 ; The above copyright notice and this permission notice shall be included in
 ; all copies or substantial portions of the Software.
 ; -----------------------------------------------------------------------------
-;   File: Vector.s
+;   File: Parser.s
 ;   Author(s): Georg Ziegler
-;   Description: This file includes the addresses of the interrupt and reset
-;   handlers.
+;   Description: This file contains subroutines to parse input commands
 ;
 
 ;-------------------------------------------------------------------------------
 ;   Includes
 ;-------------------------------------------------------------------------------
-.include "BIOS.inc"
-; .include "Registers.inc"
+.include "MemoryMap.inc"
+.include "Registers.inc"
+.include "SubroutineLauncher.inc"
+.include "SubroutineOpcodes.inc"
 ;-------------------------------------------------------------------------------
 
 ;-------------------------------------------------------------------------------
-;   Imported routines
+;   Assembler Directives
 ;-------------------------------------------------------------------------------
-.import     ResetHandler
-; .import     IRQHandler
-.import     NMIHandler
+.pc02                           ; this file contains 65C02 code
 ;-------------------------------------------------------------------------------
 
 ;-------------------------------------------------------------------------------
-;   segment VECTOR: contains the interrupt and reset handlers
+;   Routines found in this file
 ;-------------------------------------------------------------------------------
-.segment "VECTOR"
-.addr   NMIHandler              ; called on non-maskable interrupt
-.addr   ResetHandler            ; called on reset
-; .addr   IRQHandler              ; called on interrupt request
-.addr   ReadChar                ; called on interrupt request
+.export     Parser              ; parse the string found in the I/O buffer
 ;-------------------------------------------------------------------------------
+
+.segment "CODE"
+;-------------------------------------------------------------------------------
+;   Subroutine: Parser
+;   Parameters: -
+;   Description: Parse the string found in the I/O buffer and update game state
+;   accordingly.
+;-------------------------------------------------------------------------------
+.proc   Parser
+        ; PLACEHOLDER CODE: Print string to verify this has been called
+        lda     #>TestString
+        pha
+        lda     #<TestString
+        pha
+        lda     #PrintStringOpcode
+        jsr     SubroutineLauncher
+        pla
+        pla
+
+Done:
+        rts                     ; return to caller
+.endproc
+;----- end of subroutine Parser ------------------------------------------------
+
+; test data
+TestString:
+.byte   $0d, $0a, "Parser invoked.", $0d, $0a, $00

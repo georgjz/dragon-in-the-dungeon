@@ -20,7 +20,7 @@ endif
 
 # Assembler and Linker
 AS 		= ca65
-ASFLAGS	= --cpu 65C02 -W2 $(INCARGS) # $(BINARGS)
+ASFLAGS	= --cpu 65C02 $(INCARGS) # $(BINARGS)
 LD		= ld65
 LDFLAGS = -C $(MMAP) --obj-path $(OBJDIR)/ -m $(BUILDDIR)/BuildMap.txt
 
@@ -48,7 +48,7 @@ EXECUTABLE = $(BUILDDIR)/$(BUILDNAME)
 
 all: dir $(EXECUTABLE)
 
-debug: $(ASFLAGS) += -g
+debug: $(ASFLAGS) += -g -W2
 debug: dir $(EXECUTABLE)
 
 $(EXECUTABLE): $(SOBJ)

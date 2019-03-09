@@ -10,33 +10,41 @@
 ; The above copyright notice and this permission notice shall be included in
 ; all copies or substantial portions of the Software.
 ; -----------------------------------------------------------------------------
-;   File: Vector.s
+;   File: SubroutineOpcodes.s
 ;   Author(s): Georg Ziegler
-;   Description: This file includes the addresses of the interrupt and reset
-;   handlers.
+;   Description: This file contains the subroutine opcodes for the subroutine
+;   launcher found in SubroutineLauncher.s
 ;
 
 ;-------------------------------------------------------------------------------
 ;   Includes
 ;-------------------------------------------------------------------------------
 .include "BIOS.inc"
-; .include "Registers.inc"
+.include "Parser.inc"
 ;-------------------------------------------------------------------------------
 
 ;-------------------------------------------------------------------------------
-;   Imported routines
+;   Addresses of the return tables
 ;-------------------------------------------------------------------------------
-.import     ResetHandler
-; .import     IRQHandler
-.import     NMIHandler
+.export     RTSTableL           ; low bytes of the return addresses
+.export     RTSTableH           ; high bytes of the return addresses
 ;-------------------------------------------------------------------------------
 
+.segment "CODE"
 ;-------------------------------------------------------------------------------
-;   segment VECTOR: contains the interrupt and reset handlers
+;   Subroutine Return Table: These are the return addresses of all subroutines
+;   the subroutine launcher can call. The tables are split into a low and high
+;   byte table for more effective code.
 ;-------------------------------------------------------------------------------
-.segment "VECTOR"
-.addr   NMIHandler              ; called on non-maskable interrupt
-.addr   ResetHandler            ; called on reset
-; .addr   IRQHandler              ; called on interrupt request
-.addr   ReadChar                ; called on interrupt request
+RTSTableL:
+    ; BIOS.s
+.byte   <PrintString            ; opcode $00
+    ; Parser.s
+.byte   <Parser                 ; opcode $01
+
+RTSTableH:
+    ; BIOS.s
+.byte   >PrintString            ; opcode $00
+    ; Parser.s
+.byte   >Parser                 ; opcode $01
 ;-------------------------------------------------------------------------------

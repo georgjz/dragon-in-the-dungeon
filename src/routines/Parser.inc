@@ -10,20 +10,20 @@
 ; The above copyright notice and this permission notice shall be included in
 ; all copies or substantial portions of the Software.
 ; -----------------------------------------------------------------------------
-;   File: BIOS.inc
+;   File: Parser.inc
 ;   Author(s): Georg Ziegler
-;   Description: This a header file for BIOS.s, include this us the subroutines
+;   Description: This a header file for Parser.s, include this us the subroutines
 ;   defined therein.
 ;
 
 ; Header guard
-.ifndef BIOS_INC
-BIOS_INC = 1
+.ifndef PARSER_INC
+PARSER_INC = 1
 
 ;-------------------------------------------------------------------------------
 ;   Routines found in this file
 ;-------------------------------------------------------------------------------
-.import     PrintString         ; Print a string at a given address
+.import     Parser              ; parse the string found in the I/O buffer
 ;-------------------------------------------------------------------------------
 
-.endif  ; INPUTUTILS_INC
+.endif  ; PARSER_INC

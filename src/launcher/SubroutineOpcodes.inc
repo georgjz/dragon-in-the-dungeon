@@ -10,42 +10,29 @@
 ; The above copyright notice and this permission notice shall be included in
 ; all copies or substantial portions of the Software.
 ; -----------------------------------------------------------------------------
-;   File: BIOS.s
+;   File: SubroutineOpcodes.inc
 ;   Author(s): Georg Ziegler
-;   Description: This file contains subroutines to handle input and output
+;   Description: Include allows access to and holds the subroutine opcodes
 ;
 
+; Header guard
+.ifndef SUBROUTINEOPCODES_INC
+SUBROUTINEOPCODES_INC = 1
+
 ;-------------------------------------------------------------------------------
-;   Includes
+;   Addresses of the return tables
 ;-------------------------------------------------------------------------------
-; .include "SNESRegisters.inc"
-; .include "NekoMacros.inc"
-; .include "WRAMPointers.inc"
+.import     RTSTableL           ; low bytes of the return addresses
+.import     RTSTableH           ; high bytes of the return addresses
 ;-------------------------------------------------------------------------------
 
 ;-------------------------------------------------------------------------------
-;   Assembler Directives
+;   Opcodes for each subroutine
 ;-------------------------------------------------------------------------------
-.pc02                           ; this file contains 65C02 code
-;-------------------------------------------------------------------------------
-
-;-------------------------------------------------------------------------------
-;   Routines found in this file
-;-------------------------------------------------------------------------------
-.export     PrintString         ; Print a string at a given address
+    ; BIOS.inc
+    PrintStringOpcode       := $00
+    ; Parser.inc
+    ParserOpcode            := $01
 ;-------------------------------------------------------------------------------
 
-.segment "CODE"
-;-------------------------------------------------------------------------------
-;   Subroutine: PrintString
-;   Parameters: .addr Pointer
-;   Description: Prints the zero-terminated string starting at Pointer by
-;   sending it to the ACIA byte by byte.
-;-------------------------------------------------------------------------------
-.proc   PrintString
-
-        ; code
-
-        rts
-.endproc
-;----- end of subroutine PrintString -------------------------------------------
+.endif  ; SUBROUTINEOPCODES_INC

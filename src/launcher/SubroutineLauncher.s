@@ -10,33 +10,44 @@
 ; The above copyright notice and this permission notice shall be included in
 ; all copies or substantial portions of the Software.
 ; -----------------------------------------------------------------------------
-;   File: Vector.s
+;   File: SubroutineLauncher.s
 ;   Author(s): Georg Ziegler
-;   Description: This file includes the addresses of the interrupt and reset
-;   handlers.
+;   Description: This file contains the subroutine launcher for accessing all
+;   subroutines in this code.
 ;
 
 ;-------------------------------------------------------------------------------
 ;   Includes
 ;-------------------------------------------------------------------------------
-.include "BIOS.inc"
-; .include "Registers.inc"
+.include "Registers.inc"
+.include "SubroutineOpcodes.inc"
 ;-------------------------------------------------------------------------------
 
 ;-------------------------------------------------------------------------------
-;   Imported routines
+;   Assembler Directives
 ;-------------------------------------------------------------------------------
-.import     ResetHandler
-; .import     IRQHandler
-.import     NMIHandler
+.pc02                           ; this file contains 65C02 code
 ;-------------------------------------------------------------------------------
 
 ;-------------------------------------------------------------------------------
-;   segment VECTOR: contains the interrupt and reset handlers
+;   Routines found in this file
 ;-------------------------------------------------------------------------------
-.segment "VECTOR"
-.addr   NMIHandler              ; called on non-maskable interrupt
-.addr   ResetHandler            ; called on reset
-; .addr   IRQHandler              ; called on interrupt request
-.addr   ReadChar                ; called on interrupt request
+.export     SubroutineLauncher  ; Print a string at a given address
 ;-------------------------------------------------------------------------------
+
+.segment "CODE"
+;-------------------------------------------------------------------------------
+;   Subroutine: SubroutineLauncher
+;   Parameters: .byte SubroutineOpcode (passed in A)
+;   Description: Launches the subroutine associated with the passed opcode
+;-------------------------------------------------------------------------------
+.proc   SubroutineLauncher
+        tax                     ; transfer opcode to X
+        lda     RTSTableL, X    ; get low subroutine address...
+        sta     A0L             ; ...store in address register 0
+        lda     RTSTableH, X    ; get high subroutine address...
+        sta     A0H             ; ...store in address register 0
+        jmp     (A0L)           ; call subroutine
+        ; the called subroutine will return to this subroutine's caller
+.endproc
+;----- end of subroutine SubroutineLauncher ------------------------------------

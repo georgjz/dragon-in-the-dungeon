@@ -14,7 +14,7 @@ You'll need the excellent [cc65 toolchain][3] to build the code in this reposito
 
 ```
 $ git clone https://github.com/georgjz/dragon-in-the-dungeon.git
-$ cd
+$ cd dragon-in-the-dungeon/
 $ make
 ```
 

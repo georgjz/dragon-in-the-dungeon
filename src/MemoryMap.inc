@@ -28,7 +28,7 @@ MEMORYMAP_INC = 1
     PITS            = $0c       ; number of pits in the dungeon
     BUFFERSIZE      = $50       ; buffer size
     ; additional ASCII constants for parser and I/O subroutines
-    BS              = $0b       ; backspace
+    BS              = $08       ; backspace
     LF              = $0a       ; line feed
     CR              = $0d       ; carriage return
     SPACE           = $20       ; space

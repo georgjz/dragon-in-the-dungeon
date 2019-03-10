@@ -1,0 +1,19 @@
+/* Detail state Description */
+"valid N" : call move callback,
+"valid E" : call move callback,
+"valid S" : call move callback,
+"valid W" : call move callback;
+
+/* State Transitions */
+initial         => "start parser"   : Parser invoked;
+"start parser"  => "valid M"        : 'M' / VAL_M;
+"valid M"       => "direction"      : space / SPACE;
+"direction"     => "valid N"        : 'N' / VAL_N;
+"direction"     => "valid E"        : 'E' / VAL_E;
+"direction"     => "valid S"        : 'S' / VAL_S;
+"direction"     => "valid W"        : 'W' / VAL_W;
+"valid N"       => final;
+"valid E"       => final;
+"valid S"       => final;
+"valid W"       => final;
+"execute move command in direction" => final;

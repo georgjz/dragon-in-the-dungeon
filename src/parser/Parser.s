@@ -20,6 +20,8 @@
 ;-------------------------------------------------------------------------------
 .include "MemoryMap.inc"
 .include "Registers.inc"
+.include "ParserStates.inc"
+.include "StateTransitions.inc"
 .include "SubroutineLauncher.inc"
 .include "SubroutineOpcodes.inc"
 ;-------------------------------------------------------------------------------

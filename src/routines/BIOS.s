@@ -83,34 +83,59 @@ Done:
         sei                     ; disable interrupts
         lda     IOBASE          ; get char from ACIA
         ldx     IOBUFPTR        ; get current buffer offset
-        sta     IOBUFFER, X     ; store new char in I/O buffer
-        inx                     ; increment buffer offset
-        stx     IOBUFPTR
+        ; sta     IOBUFFER, X     ; store new char in I/O buffer
+        ; inx                     ; increment buffer offset
+        ; stx     IOBUFPTR
         ; check for buffer overflow
         cpx     #BUFFERSIZE     ; if buffer offset greater than 80...
         bcc     CRCheck         ; ...then continue with CR check
             ; else, print error message and reset I/O buffer
             stz     IOBUFPTR    ; reset I/O buffer offset
-            lda     #>IBufOverflowErr
+            lda     #>IBufOverflowErr   ; get error string address and push it to stack
             pha
             lda     #<IBufOverflowErr
             pha
-            lda     #PrintStringOpcode
+            lda     #PrintStringOpcode  ; call PrintString subroutine
             jsr     SubroutineLauncher
             pla                 ; clean up stack
             pla
             bra     Done
+
         ; check for carriage return
 CRCheck:
         cmp     #CR             ; check if new char is CR
-        bne     Echo            ; if not, echo new char
+        bne     BackspaceCheck  ; if not, check for backspace
             ; else, invoke parser
             stz     IOBUFPTR    ; reset input buffer
             lda     #ParserOpcode ; invoke parser
             jsr     SubroutineLauncher
             bra     Done        ; parsing done
 
+        ; handle backspace
+BackspaceCheck:
+        cmp     #BS             ; check if new char is backspace
+        bne     Echo            ; if not, echo new char
+            ; else, delete last char in I/O buffer
+            ; TODO: prevent jump below zero
+            dex                 ; move buffer offset back by one
+            stz     IOBUFFER, X ; delete previous char
+            stx     IOBUFPTR    ; set buffer offset back by one
+            lda     #>BackspaceSeq      ; get error string address and push it to stack
+            pha
+            lda     #<BackspaceSeq
+            pha
+            lda     #PrintStringOpcode  ; call PrintString subroutine
+            jsr     SubroutineLauncher
+            pla                 ; clean up stack
+            pla
+            bra     Done
+
+        ; IDEA: use Y for writing char so save stack space/cycles
 Echo:   pha                     ; save new char on stack
+        sta     IOBUFFER, X     ; store new char in I/O buffer
+        ; ldx     IOBUFPTR        ; get current buffer offset
+        inx                     ; increment buffer offset to next free space
+        stx     IOBUFPTR        ; save new buffer offset
 Wait:   lda     IOSTATUS        ; check ACIA status
         and     #$10            ; is TX register empty?
         beq     Wait            ; if not, wait
@@ -125,3 +150,6 @@ Done:   cli                     ; re-enable interrupts
 ; test data
 IBufOverflowErr:
 .byte   $0d, $0a, "Input buffer overflow!", $0d, $0a, $00
+
+BackspaceSeq:
+.byte   $1b, $5b, $44, $20, $1b, $5b, $44, $00

@@ -83,9 +83,6 @@ Done:
         sei                     ; disable interrupts
         lda     IOBASE          ; get char from ACIA
         ldx     IOBUFPTR        ; get current buffer offset
-        ; sta     IOBUFFER, X     ; store new char in I/O buffer
-        ; inx                     ; increment buffer offset
-        ; stx     IOBUFPTR
         ; check for buffer overflow
         cpx     #BUFFERSIZE     ; if buffer offset greater than 80...
         bcc     CRCheck         ; ...then continue with CR check
@@ -116,11 +113,12 @@ BackspaceCheck:
         cmp     #BS             ; check if new char is backspace
         bne     Echo            ; if not, echo new char
             ; else, delete last char in I/O buffer
-            ; TODO: prevent jump below zero
+            ldx     IOBUFPTR    ; check if buffer offset is zero, i.e. buffer is empty
+            beq     Done        ; if so, nothing to do
             dex                 ; move buffer offset back by one
             stz     IOBUFFER, X ; delete previous char
             stx     IOBUFPTR    ; set buffer offset back by one
-            lda     #>BackspaceSeq      ; get error string address and push it to stack
+            lda     #>BackspaceSeq      ; send backspace sequence to output
             pha
             lda     #<BackspaceSeq
             pha
@@ -133,7 +131,6 @@ BackspaceCheck:
         ; IDEA: use Y for writing char so save stack space/cycles
 Echo:   pha                     ; save new char on stack
         sta     IOBUFFER, X     ; store new char in I/O buffer
-        ; ldx     IOBUFPTR        ; get current buffer offset
         inx                     ; increment buffer offset to next free space
         stx     IOBUFPTR        ; save new buffer offset
 Wait:   lda     IOSTATUS        ; check ACIA status

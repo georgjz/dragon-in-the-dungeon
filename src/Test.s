@@ -52,15 +52,8 @@
         lda     #$1a
         sta     IOCTRL          ; 0 stop bits, 8 bit word, 2400 baud
 
-; MainLoop:
-        sei                     ; disable interrupts
-        lda     #>Title
-        pha
-        lda     #<Title
-        pha
-        lda     #PrintStringOpcode
-        jsr     SubroutineLauncher
 MainLoop:
+        wai
         bra     MainLoop
 .endproc
 ;----- end of ResetHandler -----------------------------------------------------

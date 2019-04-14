@@ -10,28 +10,23 @@
 ; The above copyright notice and this permission notice shall be included in
 ; all copies or substantial portions of the Software.
 ; -----------------------------------------------------------------------------
-;   File: StateTransitions.inc
+;   File: TransitionTable.inc
 ;   Author(s): Georg Ziegler
-;   Description: This file contains the state transitions for the parser
+;   Description: This file contains the state transition table for the parser
 ;   finite state machine.
 ;
 
 ; Header guard
-.ifndef STATETRANSITIONS_INC
-STATETRANSITIONS_INC = 1
+.ifndef TRANSITIONTABLE_INC
+TRANSITIONTABLE_INC = 1
 
 ;-------------------------------------------------------------------------------
-;   Parser States: All state transitions the parser finite state machine can
-;   run through. All state transitions are prefixed with 'T_' to differentiate
-;   them from states (prefixed with 'S_').
+;   Parser State Transition Table: All state transitions the parser finite state
 ;-------------------------------------------------------------------------------
-    ; T_VAL_M         = $00       ; the next char in the I/O buffer is 'M'
-    ; T_SPACE         = $01       ; the next char in the I/O buffer is ' '
-    ; T_VAL_N         = $02       ; the next char in the I/O buffer is 'N'
-    ; T_VAL_E         = $03       ; the next char in the I/O buffer is 'E'
-    ; T_VAL_S         = $04       ; the next char in the I/O buffer is 'S'
-    ; T_VAL_W         = $05       ; the next char in the I/O buffer is 'W'
-    ; T_EOS           = $06       ; the string in the I/O buffer is done
+ParserTransitionTable:
+; input     VAL_M,  VAL_N,  VAL_E,  VAL_S,  VAL_W
+; .addr   ST_VAL_M
+
 ;-------------------------------------------------------------------------------
 
-.endif  ; STATETRANSITIONS_INC
+.endif  ; TRANSITIONTABLE_INC

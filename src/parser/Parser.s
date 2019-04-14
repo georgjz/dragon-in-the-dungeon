@@ -36,7 +36,9 @@
 ;   Routines found in this file
 ;-------------------------------------------------------------------------------
 .export     Parser              ; parse the string found in the I/O buffer
+.export     GetNextState        ; returns the next state according to input and current state
 ;-------------------------------------------------------------------------------
+
 
 .segment "CODE"
 ;-------------------------------------------------------------------------------
@@ -46,7 +48,36 @@
 ;   accordingly.
 ;-------------------------------------------------------------------------------
 .proc   Parser
-        ; PLACEHOLDER CODE: Print string to verify this has been called
+;         ; use local symbols as register aliases; these registers hold local variables
+;         CurrentState = R00      ; the current state of the parser
+;         NextState    = R01      ; the next state of the parser
+;         ; fetch data before main loop
+;         ldx     IOBUFPTR        ; load I/O buffer into X (should be zero)
+;         lda     #S_START_PARSER ; set parser state to S_START_PARSER
+;         sta     CurrentState
+;
+; Loop:   lda     IOBUFFER, X     ; get next char in string
+;         pha                     ; push input byte to stack
+;         lda     CurrentState    ; load current state..
+;         pha                     ; ...and push to stack
+;         jsr     GetNextState    ; get the next state
+;
+        ; set current state to S_START_PARSER
+        ; loop
+            ; load next char
+            ; look up next state
+            ; if invalid
+                ; clear I/O buffer (aka, reset buffer offset to zero)
+                ; print error message
+                ; done
+            ; else if \0
+                ; execute command
+                ; done
+            ; inc offset
+            ; next
+
+
+        ; PLACEHOLDER CODE: Print string to verify this subroutine has been called
         lda     #>TestString
         pha
         lda     #<TestString
@@ -60,6 +91,19 @@ Done:
         rts                     ; return to caller
 .endproc
 ;----- end of subroutine Parser ------------------------------------------------
+
+;-------------------------------------------------------------------------------
+;   Subroutine: GetNextState
+;   Parameters: Input: .byte, CurrenState: .byte
+;   Description: Reads the next state from the State Transition Table
+;-------------------------------------------------------------------------------
+.proc   GetNextState
+        ; code
+Done:
+        rts                     ; return to caller
+.endproc
+;----- end of subroutine GetNextState ------------------------------------------
+
 
 ; test data
 TestString:

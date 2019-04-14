@@ -1,0 +1,11 @@
+/* Detail state Description */
+/* "move N" : call move callback,
+"move E" : call move callback,
+"move S" : call move callback,
+"move W" : call move callback; */
+
+/* State Transitions */
+initial         => "start parser"   : Parser invoked;
+"start parser"  => "valid M"        : 'M' / VAL_M;
+"valid M"       => "direction"      : space / SPACE;
+"valid M"       => "m m"            : '\0';

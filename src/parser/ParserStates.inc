@@ -30,6 +30,12 @@ PARSERSTATES_INC = 1
     S_VALID_E       = $04       ; the next char in the I/O buffer is 'E'
     S_VALID_S       = $05       ; the next char in the I/O buffer is 'S'
     S_VALID_W       = $06       ; the next char in the I/O buffer is 'W'
+    S_MOVE_N        = $07       ; input string was valid, move North
+    S_MOVE_E        = $08       ; input string was valid, move East
+    S_MOVE_S        = $09       ; input string was valid, move South
+    S_MOVE_W        = $0a       ; input string was valid, move West
+
+    S_INVALID       = $ff       ; the (next) state is invalid
 ;-------------------------------------------------------------------------------
 
 .endif  ; PARSERSTATES_INC

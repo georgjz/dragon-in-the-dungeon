@@ -1,0 +1,4 @@
+
+Line := Command, Argument;
+Command := "Move";
+Argument := "North" | "East" | "South" | "West";

@@ -10,30 +10,23 @@
 ; The above copyright notice and this permission notice shall be included in
 ; all copies or substantial portions of the Software.
 ; -----------------------------------------------------------------------------
-;   File: SubroutineOpcodes.inc
+;   File: TransitionTable.inc
 ;   Author(s): Georg Ziegler
-;   Description: Include allows access to and holds the subroutine opcodes
+;   Description: This file contains the state transition table for the parser
+;   finite state machine.
 ;
 
 ; Header guard
-.ifndef SUBROUTINEOPCODES_INC
-SUBROUTINEOPCODES_INC = 1
-
-; TODO: Unsinn?
-;-------------------------------------------------------------------------------
-;   Addresses of the return tables
-;-------------------------------------------------------------------------------
-.import     RTSTableL           ; low bytes of the return addresses
-.import     RTSTableH           ; high bytes of the return addresses
-;-------------------------------------------------------------------------------
+.ifndef TRANSITIONTABLE_INC
+TRANSITIONTABLE_INC = 1
 
 ;-------------------------------------------------------------------------------
-;   Opcodes for each subroutine
+;   Parser State Transition Table: All state transitions the parser finite state
 ;-------------------------------------------------------------------------------
-    ; BIOS.inc
-    PrintStringOpcode       := $00
-    ; Parser.inc
-    ParserOpcode            := $01
+ParserTransitionTable:
+; input     VAL_M,  VAL_N,  VAL_E,  VAL_S,  VAL_W
+; .addr   ST_VAL_M
+
 ;-------------------------------------------------------------------------------
 
-.endif  ; SUBROUTINEOPCODES_INC
+.endif  ; TRANSITIONTABLE_INC

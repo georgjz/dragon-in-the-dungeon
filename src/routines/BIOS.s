@@ -56,9 +56,9 @@
         inx                     ; increment counter
         lda     $0100, X        ; get high byte of Pointer
         sta     A0H             ; store in address register 0 high
+
         ; start output loop
         ldy     #$00            ; use Y as offset
-
 Loop:   lda     IOSTATUS        ; check ACIA status
         and     #$10            ; is the TX register empty?
         beq     Loop            ; if not, wait and check again
@@ -95,7 +95,7 @@ Done:
             pha
             lda     #PrintStringOpcode  ; call PrintString subroutine
             jsr     SubroutineLauncher
-            pla                 ; clean up stack
+            pla                         ; clean up stack
             pla
             bra     Done
 
@@ -104,10 +104,10 @@ CRCheck:
         cmp     #CR             ; check if new char is CR
         bne     BackspaceCheck  ; if not, check for backspace
             ; else, invoke parser
-            stz     IOBUFPTR    ; reset input buffer
-            lda     #ParserOpcode ; invoke parser
+            stz     IOBUFPTR            ; reset input buffer
+            lda     #ParserOpcode       ; invoke parser
             jsr     SubroutineLauncher
-            bra     Done        ; parsing done
+            bra     Done                ; parsing done
 
         ; handle backspace
 BackspaceCheck:

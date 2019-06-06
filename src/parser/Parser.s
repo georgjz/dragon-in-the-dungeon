@@ -48,13 +48,13 @@
 ;   accordingly.
 ;-------------------------------------------------------------------------------
 .proc   Parser
-;         ; use local symbols as register aliases; these registers hold local variables
-;         CurrentState = R00      ; the current state of the parser
-;         NextState    = R01      ; the next state of the parser
-;         ; fetch data before main loop
-;         ldx     IOBUFPTR        ; load I/O buffer into X (should be zero)
-;         lda     #S_START_PARSER ; set parser state to S_START_PARSER
-;         sta     CurrentState
+        ; use local symbols as register aliases; these registers hold local variables
+        CurrentState = R00      ; the current state of the parser
+        NextState    = R01      ; the next state of the parser
+        ; fetch data before main loop
+        ldx     IOBUFPTR        ; load I/O buffer into X (should be zero)
+        lda     #S_START_PARSER ; set parser state to S_START_PARSER
+        sta     CurrentState
 ;
 ; Loop:   lda     IOBUFFER, X     ; get next char in string
 ;         pha                     ; push input byte to stack
